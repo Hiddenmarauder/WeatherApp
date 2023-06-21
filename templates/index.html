@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Weather App</h1>
+
+    <div class="weather-container">
+        <input type="text" id="city-input" placeholder="Enter city name">
+        <button id="get-weather-btn" onclick="getWeather()">Get Weather</button>
+
+        <div class="weather-info">
+            <p id="weather-label">Weather:</p>
+            <p id="temperature-label">Temperature:</p>
+            <p id="humidity-label">Humidity:</p>
+        </div>
+    </div>
+
+    <script>
+        function getWeather() {
+            var city = document.getElementById('city-input').value;
+            var api_key = 'bb4f0f098bb7f4f9fc55cfed71442650';  // Replace with your actual API key
+
+            // Make an API request to retrieve weather data
+            var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + api_key;
+            var request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.onload = function() {
+                if (request.status === 200) {
+                    var data = JSON.parse(request.responseText);
+                    if (data.cod === 200) {
+                        var weatherInfo = data.weather[0].description;
+                        var temperature = (data.main.temp - 273.15).toFixed(2);  // Convert temperature to Celsius
+                        var humidity = data.main.humidity;
+
+                        document.getElementById('weather-label').textContent = 'Weather: ' + weatherInfo;
+                        document.getElementById('temperature-label').textContent = 'Temperature: ' + temperature + ' °C';
+                        document.getElementById('humidity-label').textContent = 'Humidity: ' + humidity + '%';
+                    } else {
+                        document.getElementById('weather-label').textContent = 'Error: Invalid city';
+                    }
+                } else {
+                    document.getElementById('weather-label').textContent = 'Error: Failed to retrieve weather data';
+                }
+            };
+            request.send();
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #dddbdb;
+            scroll-behavior: smooth;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 200px;
+            
+        }
+
+        .weather-container {
+            width: 300Px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(38, 216, 11, 0.3);
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 9px;
+            margin-bottom: 10px;
+            border-radius: 100px;
+            box-shadow:-px -px rgb(0, 0, 0);
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px green;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+            text-shadow: 0 1px 1px green ;
+        }
+
+        .weather-info p {
+            margin: 5px 0;
+        }
+    </style>
+</body>
+</html>
